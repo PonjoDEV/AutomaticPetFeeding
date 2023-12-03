@@ -23,7 +23,7 @@
 
 // ======================================================================================================
 // --- Bibliotecas Auxiliares ---
-//#include <SoftwareSerial.h> // Biblioteca utilzada no HC05
+#include <SoftwareSerial.h>   // Biblioteca utilzada no HC05
 #include <DS3231.h>           //Inclui a biblioteca do DS3231 Shield
 
 
@@ -31,28 +31,33 @@
 // --- Mapeamento de Hardware modulo RTC ---
 #define vcc 17
 #define gnd 16
+
 // --- Mapeamento de Hardware modulo HC05 ---
-#define ledPin 9
-#define buttonPin 8
+SoftwareSerial serialBT(2,3);
+int valorBT;
+
+// --- Mapeamento de Hardware modulo e ligações Arduino ---
+#define relay 7
 
 // ======================================================================================================
 // --- Declaração de Objetos ---
 DS3231 rtc(SDA, SCL);
 Time t;
-int horas, minutos, segundos, ano, mes, dia, nHorarios = 0;
+int horas, minutos, segundos, ano, mes, dia, nHorarios = 4;
 
 
 // ======================================================================================================
 // --- Configurações Iniciais ---
 void setup() {
   //Configuração dos pinos
-  pinMode(7, OUTPUT);
+  pinMode(relay, OUTPUT);
   pinMode(vcc, OUTPUT);
   pinMode(gnd, OUTPUT);
   digitalWrite(vcc, HIGH);
   digitalWrite(gnd, LOW);
 
-  Serial.begin(9600);  //Inicia comunicações Serial em 9600 baud rate
+  serialBT.begin(9600); //inicializa comunicação serial do BT em 9600 baud rate
+  Serial.begin(9600);   //Inicia comunicações Serial em 9600 baud rate
 
   rtc.begin();  //Inicializa RTC
   
@@ -61,8 +66,7 @@ void setup() {
   //rtc.setTime(11,37, 10);     // Set the time to 12:00:00 (24hr format)
   //rtc.setDate(03,12,2023);    // Set the date to (dd,mm,yyyy)
 
-}  //end setup
-
+}  
 
 // ======================================================================================================
 // --- Loop Infinito ---
@@ -79,27 +83,29 @@ void loop() {
   //Serial.print(horas);
   //Serial.print("   ");
   Serial.print(dia);
-  Serial.print("  --  ");
-  //Imprime o dia da semana
-  Serial.print(rtc.getDOWStr());
+  Serial.print("  --  ");  
+  Serial.print(rtc.getDOWStr());  //Imprime o dia da semana
   Serial.print("  --  ");
   Serial.print(rtc.getDateStr());  
   Serial.print("  --  ");
 
-  //Imprime o horário
-  Serial.println(rtc.getTimeStr());
-  //if (!buttonPressed){ //caso botão bluetooth esteja apertado, ele pulará a etapa de alimentação marcada, necessário implementar o buttonPressed
+  Serial.println(rtc.getTimeStr()); //Imprime o horário
+
+  if (serialBT.available()>0){    //Checando se há dados chegando pela comunicação serial
+    valorBT = serialBT.read();    //Lendo o byte mais antigo no buffer serial
+  }
+  if (valorBT != 'Y'){          //Caso botão de alimentar do App Android não esteja pressionado, seguir com alimentação padrão 
     if (segundos % 5 == 0 && segundos % 10 != 0) {
-      digitalWrite(7, HIGH);
+      digitalWrite(relay, HIGH);
     } else {
       if (segundos % 10 == 0) {
-        digitalWrite(7, LOW);
+        digitalWrite(relay, LOW);
       }
     }
-  //} else{
-  //  digitalWrite(7, HIGH);
-  //}
+  } else{                       //Caso o botão do App conectado via bluetooth esteja apertado, ativar pino 7 rele
+    digitalWrite(relay, HIGH);
+  }
   //Atualiza monitor a cada segundo
   delay(1000);
 
-}  //end loop
+}

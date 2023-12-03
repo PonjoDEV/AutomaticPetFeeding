@@ -1,5 +1,6 @@
 package com.example.automaticpetfeeding
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -20,9 +21,9 @@ class MainActivity : AppCompatActivity(), OnClickListener {
 
         startUp()
     }
-
     private fun startUp() {
         binding.feedButton.setOnClickListener(this)
+        binding.timePicker.setOnClickListener(this)
     }
 
     //Adding actions to the buttons on the Screen
@@ -31,6 +32,15 @@ class MainActivity : AppCompatActivity(), OnClickListener {
             binding.feedButton.id -> {
 
             }
+            binding.timePicker.id -> {
+                feedingSchedule()
+            }
         }
+    }
+
+    //Transitioning to the time of feeding Schedule layout
+    private fun feedingSchedule() {
+        val transitionFeedingSchedule: Intent = Intent(baseContext, TimepickerActivity::class.java)
+        startActivity(transitionFeedingSchedule)
     }
 }
