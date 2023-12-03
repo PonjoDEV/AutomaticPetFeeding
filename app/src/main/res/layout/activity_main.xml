@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity"
+    android:background="@color/background">
+
+    <ImageView
+        android:id="@+id/circle_one_top"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:src="@drawable/baseline_circle_24"
+
+        tools:ignore="UseAppTint"
+        android:tint="@color/shapes"
+
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+
+        android:layout_marginTop="-12dp"
+    />
+
+
+    <ImageView
+        android:id="@+id/circle_two_bottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:src="@drawable/baseline_circle_24"
+
+        tools:ignore="UseAppTint"
+        android:tint="@color/shapes"
+
+        app:layout_constraintStart_toEndOf="@id/circle_one_bottom"
+        app:layout_constraintEnd_toEndOf="@id/circle_one_bottom"
+        app:layout_constraintBottom_toBottomOf="parent"
+    />
+    
+    <ImageView
+        android:id="@+id/dog"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:src="@drawable/dog"
+
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="-64dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginBottom="-64dp"
+    />
+
+    <ImageView
+        android:id="@+id/cat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:src="@drawable/cat"
+
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="-110dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginEnd="-356dp"
+    />
+
+    <ImageView
+        android:id="@+id/circle_one_bottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:src="@drawable/baseline_circle_24"
+
+        tools:ignore="UseAppTint"
+        android:tint="@color/shapes"
+
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="-64dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="-64dp"
+        />
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Alimentador automático"
+
+        android:textSize="64sp"
+        android:textAlignment="center"
+        android:textStyle="bold"
+        android:background="@color/shapes"
+        android:textColor="@color/white"
+
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+
+        android:layout_marginBottom="512dp"
+    />
+
+    <Button
+        android:id="@+id/feed_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Alimentar agora"
+
+        android:textStyle="bold"
+        android:textSize="18sp"
+        android:textColor="@color/white"
+
+        android:backgroundTint="@color/shapes"
+        app:cornerRadius="4dp"
+
+        app:layout_constraintTop_toBottomOf="@id/title"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="32dp"
+    />
+
+    <Button
+        android:id="@+id/time_picker"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Escolher horários"
+
+        android:textStyle="bold"
+        android:textSize="18sp"
+        android:textColor="@color/white"
+
+        android:backgroundTint="@color/shapes"
+        app:cornerRadius="4dp"
+
+        app:layout_constraintTop_toBottomOf="@id/feed_button"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="32dp"
+    />
+
+    <Button
+        android:id="@+id/profile_picker"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Trocar perfil"
+
+        android:textStyle="bold"
+        android:textSize="18sp"
+        android:textColor="@color/white"
+
+        android:backgroundTint="@color/shapes"
+        app:cornerRadius="4dp"
+
+        app:layout_constraintTop_toBottomOf="@id/time_picker"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="32dp"
+    />
+
+    <TextView
+        android:id="@+id/current_profile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Perfil atual: Garfield"
+
+        android:textSize="16sp"
+        android:textAlignment="center"
+        android:textStyle="bold"
+        android:background="@color/shapes"
+        android:textColor="@color/black"
+
+        app:layout_constraintTop_toBottomOf="@id/profile_picker"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        />
+
+    <Button
+        android:id="@+id/conetc_HC05"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Conectar a HC-05"
+
+        android:textSize="12sp"
+        android:textColor="@color/black"
+
+        android:backgroundTint="@color/blue_details"
+        app:cornerRadius="4dp"
+
+        app:layout_constraintTop_toBottomOf="@id/current_profile"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+
+        android:layout_marginStart="-64dp"
+        android:layout_marginTop="8dp"
+
+        />
+
+    <ImageButton
+        android:id="@+id/search_devices"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:src="@drawable/baseline_bluetooth_searching_24"
+
+        android:backgroundTint="@color/blue_details"
+        app:cornerRadius="4dp"
+
+        app:layout_constraintTop_toTopOf="@id/conetc_HC05"
+        app:layout_constraintBottom_toBottomOf="@id/conetc_HC05"
+        app:layout_constraintStart_toEndOf="@id/conetc_HC05"
+
+        android:layout_marginStart="16dp"
+        />
+
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
