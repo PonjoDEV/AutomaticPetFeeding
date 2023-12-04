@@ -24,6 +24,7 @@ class MainActivity : AppCompatActivity(), OnClickListener {
     private fun startUp() {
         binding.feedButton.setOnClickListener(this)
         binding.timePicker.setOnClickListener(this)
+        binding.profilePicker.setOnClickListener(this)
     }
 
     //Adding actions to the buttons on the Screen
@@ -35,7 +36,15 @@ class MainActivity : AppCompatActivity(), OnClickListener {
             binding.timePicker.id -> {
                 feedingSchedule()
             }
+            binding.profilePicker.id -> {
+                profileList()
+            }
         }
+    }
+
+    private fun profileList() {
+        val transitionProfileList: Intent = Intent(baseContext, ProfileActivity::class.java)
+        startActivity(transitionProfileList)
     }
 
     //Transitioning to the time of feeding Schedule layout
