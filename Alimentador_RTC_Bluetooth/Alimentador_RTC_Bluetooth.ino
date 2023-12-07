@@ -133,7 +133,7 @@ void loop() {
     valorBT = serialBT.read();    //Lendo o byte mais antigo no buffer serial
     flag =0;                      //Caso tenha alguma nova leitura, a flag será definida para 0
   }
-  if (valorBT != 'Y'){          //Caso botão de alimentar do App Android não esteja pressionado, seguir com alimentação padrão automatica
+  if (valorBT != 'Y'){          //Caso botão feedButton do App Android não esteja pressionado, seguir com alimentação padrão automatica
     for(int i=0; i<5;i++){      
       if(vHoras[i]==horas && vMin[i] == minutos && nHorarios<=i){        
         digitalWrite(relay, HIGH);

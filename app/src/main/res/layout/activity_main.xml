@@ -76,6 +76,7 @@
 
         tools:ignore="UseAppTint"
         android:tint="@color/shapes"
+        android:alpha=".75"
 
         app:layout_constraintStart_toStartOf="parent"
         android:layout_marginStart="-64dp"

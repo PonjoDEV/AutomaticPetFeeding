@@ -12,6 +12,5 @@ class TimepickerActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityTimepickerBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
     }
 }
