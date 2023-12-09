@@ -43,7 +43,7 @@ int valorBT;
 // --- Declaração de Objetos ---
 DS3231 rtc(SDA, SCL);
 Time t;
-int horas, minutos, segundos, ano, mes, dia, nHorarios = 0, flag = 0, resetDia = 0, tempoAtivado = 5000;
+int horas, minutos, segundos, ano, mes, dia, nHorarios = 0, flag = 0, resetDia = 0, tempoAtivado = 1500;
 int vHoras[5];
 int vMin[5];
 int vQuant[5];
@@ -88,10 +88,11 @@ void setup() {
   rtc.begin();  //Inicializa RTC
   
   //Descomente as linhas a seguir para configurar o horário, após comente e faça o upload novamente para o Arduino
-  //rtc.setDOW(FRIDAY);         // Set Day-of-Week to SUNDAY
-  //rtc.setTime(23,00, 10);     // Set the time to 12:00:00 (24hr format)
-  //rtc.setDate(8,12,2023);    // Set the date to (dd,mm,yyyy)
-
+  /*
+  rtc.setDOW(SATURDAY);         // Set Day-of-Week to SUNDAY
+  rtc.setTime(14,43, 10);     // Set the time to 12:00:00 (24hr format)
+  rtc.setDate(9,12,2023);    // Set the date to (dd,mm,yyyy)
+  /**/
 }  
 
 void loop() {
@@ -138,8 +139,14 @@ void loop() {
   }
 
   if (!manual){          //Caso botão feedButton do App Android não esteja pressionado, seguir com alimentação padrão automatica
-    for(int i=0; i<5;i++){      
-      if(vHoras[i]==horas && vMin[i] == minutos && nHorarios<=i){        
+    for(int i=0; i<5;i++){       
+
+      while(horas>vHoras[nHorarios] && minutos >vMin[nHorarios]){        
+        nHorarios++;
+        Serial.println(nHorarios);
+      }
+
+      if(vHoras[nHorarios]==horas && vMin[nHorarios] == minutos && vQuant[i-1]==nHorarios){        
         digitalWrite(relay, HIGH);
         delay(tempoAtivado);
         digitalWrite(relay, LOW);
@@ -162,5 +169,5 @@ void loop() {
     Serial.println("Alimentação no modo automático");
   }
   //Atualiza monitor a cada 0,05s
-  delay(50);
+  delay(1000);
 }

@@ -17,6 +17,7 @@ import android.annotation.SuppressLint
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothSocket
 import android.widget.Toast
+import androidx.core.content.getSystemService
 import java.io.IOException
 import java.io.OutputStream
 import java.util.UUID
@@ -32,10 +33,6 @@ class MainActivity : AppCompatActivity(), OnClickListener {
         private const val PERMISSION_REQUEST_BLUETOOTH = 2
     }
 
-    private val bluetoothAdapter: BluetoothAdapter? by lazy {
-        val bluetoothManager = getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
-        bluetoothManager.adapter
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -82,7 +79,31 @@ class MainActivity : AppCompatActivity(), OnClickListener {
     }
 
     private fun searchDevices() {
-        TODO("Not yet implemented")
+        val bluetoothManager: BluetoothManager = getSystemService(BluetoothManager::class.java)
+        val bluetoothAdapter: BluetoothAdapter? = bluetoothManager.adapter
+        if (bluetoothAdapter != null) {
+
+            Toast.makeText(this,"Olha eu com boné", Toast.LENGTH_SHORT).show()
+
+            if (bluetoothAdapter?.isEnabled == false) {
+                val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
+
+                if (ActivityCompat.checkSelfPermission(this,Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
+                    // TODO: Consider calling
+                    //    ActivityCompat#requestPermissions
+                    // here to request the missing permissions, and then overriding
+                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                    //                                          int[] grantResults)
+                    // to handle the case where the user grants the permission. See the documentation
+                    // for ActivityCompat#requestPermissions for more details.
+                    return
+                }
+                startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT)
+            }
+
+        }else{
+            Toast.makeText(this,"Dispositivo sem suporte Bluetooth", Toast.LENGTH_SHORT).show()
+        }
     }
 
 
