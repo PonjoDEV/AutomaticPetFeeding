@@ -26,7 +26,6 @@
 #include <SoftwareSerial.h>   // Biblioteca utilzada no HC05
 #include <DS3231.h>           //Inclui a biblioteca do DS3231 Shield
 
-
 // ======================================================================================================
 // --- Mapeamento de Hardware modulo RTC ---
 #define vcc 17
@@ -39,17 +38,19 @@ int valorBT;
 // --- Mapeamento de Hardware modulo e ligações Arduino ---
 #define relay 7
 
+
 // ======================================================================================================
 // --- Declaração de Objetos ---
 DS3231 rtc(SDA, SCL);
 Time t;
-int horas, minutos, segundos, ano, mes, dia, nHorarios = 0, flag = 0, resetDia = 0, tempoAtivado =5000;
+int horas, minutos, segundos, ano, mes, dia, nHorarios = 0, flag = 0, resetDia = 0, tempoAtivado = 5000;
 int vHoras[5];
 int vMin[5];
 int vQuant[5];
 
-// ======================================================================================================
-// --- Configurações Iniciais ---
+const int botaoPin = 8;  //Definindo pino do botão de ativação como 8 ligado ao VCC
+bool manual = false;    ///Ativação manual
+
 void setup() {
   //Configuração dos pinos
   pinMode(relay, OUTPUT);
@@ -57,6 +58,8 @@ void setup() {
   pinMode(gnd, OUTPUT);
   digitalWrite(vcc, HIGH);
   digitalWrite(gnd, LOW);
+
+  pinMode(botaoPin, INPUT);   // Configura o pino do botão como entrada
 
   // --- Povoando os vetores, será feito através aplicativo android ---
   // --- Horas em que ocorre alimentação
@@ -85,21 +88,15 @@ void setup() {
   rtc.begin();  //Inicializa RTC
   
   //Descomente as linhas a seguir para configurar o horário, após comente e faça o upload novamente para o Arduino
-  //rtc.setDOW(SUNDAY);         // Set Day-of-Week to SUNDAY
-  //rtc.setTime(11,37, 10);     // Set the time to 12:00:00 (24hr format)
-  //rtc.setDate(03,12,2023);    // Set the date to (dd,mm,yyyy)
+  //rtc.setDOW(FRIDAY);         // Set Day-of-Week to SUNDAY
+  //rtc.setTime(23,00, 10);     // Set the time to 12:00:00 (24hr format)
+  //rtc.setDate(8,12,2023);    // Set the date to (dd,mm,yyyy)
 
 }  
 
-// ======================================================================================================
-// --- Loop Infinito ---
 void loop() {
-
-  //  O COMANDO A SER MANDADO PELO APP ANDROID É AO APERTAR O BOTÃO
-  //  'Y' 
-  //  DELAY(1000) 
-  //  '0' 
-  //  COMO DADO TRANSMITIDO
+  //Lendo botao fisico
+  int btnPressed = digitalRead(botaoPin);
 
   //Inicializando com valor LOW para não mandar energia ao pino
   digitalWrite(relay, LOW);
@@ -133,7 +130,14 @@ void loop() {
     valorBT = serialBT.read();    //Lendo o byte mais antigo no buffer serial
     flag =0;                      //Caso tenha alguma nova leitura, a flag será definida para 0
   }
-  if (valorBT != 'Y'){          //Caso botão feedButton do App Android não esteja pressionado, seguir com alimentação padrão automatica
+  
+  if (valorBT != 'Y' && btnPressed != HIGH){
+    manual = false;
+  }else{
+    manual = true;
+  }
+
+  if (!manual){          //Caso botão feedButton do App Android não esteja pressionado, seguir com alimentação padrão automatica
     for(int i=0; i<5;i++){      
       if(vHoras[i]==horas && vMin[i] == minutos && nHorarios<=i){        
         digitalWrite(relay, HIGH);
@@ -155,7 +159,8 @@ void loop() {
     flag =1;
     delay(tempoAtivado);
     digitalWrite(relay, LOW);
+    Serial.println("Alimentação no modo automático");
   }
-  //Atualiza monitor a cada segundo
-  delay(1000);
+  //Atualiza monitor a cada 0,05s
+  delay(50);
 }
