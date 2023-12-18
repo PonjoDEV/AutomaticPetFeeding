@@ -107,6 +107,7 @@
 
         tools:ignore="UseAppTint"
         android:tint="@color/shapes"
+        android:alpha=".75"
 
         app:layout_constraintStart_toStartOf="parent"
         android:layout_marginStart="-64dp"
@@ -123,6 +124,7 @@
 
         tools:ignore="UseAppTint"
         android:tint="@color/shapes"
+        android:alpha=".75"
 
         app:layout_constraintStart_toEndOf="@id/circle_one_bottom"
         app:layout_constraintEnd_toEndOf="@id/circle_one_bottom"

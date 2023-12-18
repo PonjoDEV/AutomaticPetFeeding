@@ -20,6 +20,7 @@
    
 ====================================================================================================== */
 
+//HC-05 ADRESS 00:21:13:00:8C:22
 
 // ======================================================================================================
 // --- Bibliotecas Auxiliares ---
@@ -88,11 +89,10 @@ void setup() {
   rtc.begin();  //Inicializa RTC
   
   //Descomente as linhas a seguir para configurar o horário, após comente e faça o upload novamente para o Arduino
-  /*
-  rtc.setDOW(SATURDAY);         // Set Day-of-Week to SUNDAY
-  rtc.setTime(14,43, 10);     // Set the time to 12:00:00 (24hr format)
-  rtc.setDate(9,12,2023);    // Set the date to (dd,mm,yyyy)
-  /**/
+  
+  //rtc.setDOW(SUNDAY);         // Set Day-of-Week
+  //rtc.setTime(20,17, 10);     // Set the time to 12:00:00 (24hr format)
+  //rtc.setDate(10,12,2023);    // Set the date to (dd,mm,yyyy)  
 }  
 
 void loop() {
@@ -118,6 +118,7 @@ void loop() {
 
   //Serial.print(horas);
   //Serial.print("   ");
+  
   Serial.print(dia);
   Serial.print("  --  ");  
   Serial.print(rtc.getDOWStr());  //Imprime o dia da semana
@@ -125,7 +126,7 @@ void loop() {
   Serial.print(rtc.getDateStr());  
   Serial.print("  --  ");
 
-  Serial.println(rtc.getTimeStr()); //Imprime o horário
+  Serial.println(rtc.getTimeStr()); //Imprime o horário  
 
   if (serialBT.available()>0){    //Checando se há dados chegando pela comunicação serial
     valorBT = serialBT.read();    //Lendo o byte mais antigo no buffer serial
@@ -141,9 +142,9 @@ void loop() {
   if (!manual){          //Caso botão feedButton do App Android não esteja pressionado, seguir com alimentação padrão automatica
     for(int i=0; i<5;i++){       
 
-      while(horas>vHoras[nHorarios] && minutos >vMin[nHorarios]){        
-        nHorarios++;
-        Serial.println(nHorarios);
+      while(horas>vHoras[nHorarios] && minutos >vMin[nHorarios]){   
+        //Serial.println(nHorarios);     
+        nHorarios++;        
       }
 
       if(vHoras[nHorarios]==horas && vMin[nHorarios] == minutos && vQuant[i-1]==nHorarios){        
@@ -151,23 +152,27 @@ void loop() {
         delay(tempoAtivado);
         digitalWrite(relay, LOW);
         nHorarios++;
-        Serial.println(nHorarios);
+        //Serial.println(nHorarios);
       }else{        
         digitalWrite(relay, LOW);
       }
     }    
     if (flag == 0){ 
       Serial.println("Alimentação no modo automático"); // Caso haja uma nova entrada do BT, será acusado a mudança através do serial, (Utilizar Serial ou serialBT ?)
+      serialBT.println("Alimentação no modo automático");
       flag =1;
     }
   } else{                       
     digitalWrite(relay, HIGH);
     Serial.println("Alimentação no modo manual");   // Caso haja uma nova entrada do BT, será acusado a mudança através do serial, (Utilizar Serial ou serialBT ?)
+    serialBT.println("Alimentação no modo manual");
     flag =1;
     delay(tempoAtivado);
     digitalWrite(relay, LOW);
     Serial.println("Alimentação no modo automático");
+    serialBT.println("Alimentação no modo automático");
   }
+  
   //Atualiza monitor a cada 0,05s
-  delay(1000);
+  delay(50);
 }

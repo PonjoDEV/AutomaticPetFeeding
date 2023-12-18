@@ -10,28 +10,37 @@ import android.os.Bundle
 import android.view.View
 import android.view.View.OnClickListener
 import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import com.example.automaticpetfeeding.databinding.ActivityMainBinding
 import android.Manifest
+import android.R
 import android.annotation.SuppressLint
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothSocket
+import android.content.BroadcastReceiver
+import android.content.IntentFilter
+import android.widget.ArrayAdapter
 import android.widget.Toast
-import androidx.core.content.getSystemService
 import java.io.IOException
-import java.io.OutputStream
 import java.util.UUID
 
 class MainActivity : AppCompatActivity(), OnClickListener {
 
     lateinit var binding:ActivityMainBinding
-    var HC05on:Boolean = false
-    lateinit var macAddress:String
+    lateinit var bluetoothAdapter: BluetoothAdapter
+    lateinit var bluetoothManager: BluetoothManager
+    private lateinit var bluetoothSocket: BluetoothSocket
+    lateinit var bluetoothItens: MutableList<String>
+    lateinit var adapter:ArrayAdapter<String>
+    lateinit var bluetRun:Runnable
+    private val REQUEST_LOCATION_PERM = 99
 
-    companion object {
-        private const val REQUEST_ENABLE_BT = 1
-        private const val PERMISSION_REQUEST_BLUETOOTH = 2
-    }
+    var HC05on:Boolean = false
+
+    //MACadress of the HC-05 Module on Arduino
+    var macAddress:String = "00:21:13:00:8C:22"
+
+    lateinit var btAdapter: BluetoothAdapter
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,20 +52,26 @@ class MainActivity : AppCompatActivity(), OnClickListener {
         //setContentView(R.layout.activity_main)
 
         startUp()
+        //Automatically searching for the devices once the program boots up
+        searchDevices()
+
     }
     private fun startUp() {
         binding.feedButton.setOnClickListener(this)
         binding.timePicker.setOnClickListener(this)
         binding.profilePicker.setOnClickListener(this)
         binding.searchDevices.setOnClickListener(this)
-        binding.conetcHC05.setOnClickListener(this)
+        binding.refreshHC05.setOnClickListener(this)
     }
 
     //Adding actions to the buttons on the Screen
     override fun onClick(bt: View) {
         when (bt.id) {
             binding.feedButton.id -> {
-                feedNow()
+                //Sends a Y indicating a "YES" for manual activation
+                feedNow("Y")
+                //Then it sends a blank space to stop
+                feedNow(" ")
             }
             binding.timePicker.id -> {
                 feedingSchedule()
@@ -67,64 +82,129 @@ class MainActivity : AppCompatActivity(), OnClickListener {
             binding.searchDevices.id -> {
                 searchDevices()
             }
-            binding.conetcHC05.id -> {
-                conectHC05()
+            binding.refreshHC05.id -> {
+                refreshHC05()
             }
 
         }
     }
 
-    private fun conectHC05() {
+    //Button call
+    private fun refreshHC05() {
 
     }
 
+    //Button call
+    @SuppressLint("MissingPermission")
     private fun searchDevices() {
-        val bluetoothManager: BluetoothManager = getSystemService(BluetoothManager::class.java)
-        val bluetoothAdapter: BluetoothAdapter? = bluetoothManager.adapter
-        if (bluetoothAdapter != null) {
+        bluetoothItens = mutableListOf()
+        adapter = ArrayAdapter(baseContext, R.layout.simple_list_item_1,bluetoothItens)
 
-            Toast.makeText(this,"Olha eu com boné", Toast.LENGTH_SHORT).show()
+        //binding.feedbackTxt.adapter = adapter
 
-            if (bluetoothAdapter?.isEnabled == false) {
-                val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
+        bluetoothConfig()
+        connectByBlueTooth(macAddress)
+    }
 
-                if (ActivityCompat.checkSelfPermission(this,Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
-                    // TODO: Consider calling
-                    //    ActivityCompat#requestPermissions
-                    // here to request the missing permissions, and then overriding
-                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                    //                                          int[] grantResults)
-                    // to handle the case where the user grants the permission. See the documentation
-                    // for ActivityCompat#requestPermissions for more details.
-                    return
-                }
-                startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT)
-            }
-
-        }else{
-            Toast.makeText(this,"Dispositivo sem suporte Bluetooth", Toast.LENGTH_SHORT).show()
+    //Button call
+    private fun feedNow(command:String) {
+        try {
+            val outputStream = bluetoothSocket.outputStream
+            outputStream.write(command.toByteArray())
+        }catch (e: IOException){
+            Toast.makeText(this,"Não foi possível alimentar agora, reconectar ao HC05",Toast.LENGTH_LONG).show()
         }
     }
 
-
-    private fun feedNow():Boolean {
-        if (HC05on) {
-            //TODO
-        }else{
-            println("HC-05 não conectado")
-        }
-        return HC05on
-    }
-
-    //Transitioning to the profile table layout
+    //Button call Transitioning to the profile table layout
     private fun profileList() {
         val transitionProfileList: Intent = Intent(baseContext, ProfileActivity::class.java)
         startActivity(transitionProfileList)
     }
 
-    //Transitioning to the time of feeding Schedule layout
+    //Button callTransitioning to the time of feeding Schedule layout
     private fun feedingSchedule() {
         val transitionFeedingSchedule: Intent = Intent(baseContext, TimepickerActivity::class.java)
         startActivity(transitionFeedingSchedule)
+    }
+
+    //Conecting to the HC05
+    @SuppressLint("MissingPermission")
+    private fun connectByBlueTooth(deviceAddress: String) {
+
+        bluetRun = Runnable {
+
+            val device = bluetoothAdapter.getRemoteDevice(deviceAddress)
+            val uuid: UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB") // UUID para comunicação SPP
+
+            try {
+                // Criação de um soquete Bluetooth para comunicação
+                val socket: BluetoothSocket = device.createRfcommSocketToServiceRecord(uuid)
+
+                // Tenta conectar ao dispositivo
+                socket.connect()
+                bluetoothSocket = socket // Armazena o soquete para uso posterior
+
+                runOnUiThread {
+                    Toast.makeText(this, "Conectado ao HC-05", Toast.LENGTH_SHORT).show()
+                    // Chama a função feedNow após a conexão bem-sucedida
+                }
+
+            } catch (e: IOException) {
+                // Lida com exceções de conexões falhas
+                runOnUiThread {
+                    Toast.makeText(this, "Erro na conexão Bluetooth", Toast.LENGTH_SHORT).show()
+                }
+                e.printStackTrace()
+            }
+        }
+        bluetRun.run()
+    }
+
+    //Setting bluetooth configuration
+    private fun bluetoothConfig() {
+        //Checking for permissions
+        requestPermissions(arrayOf(Manifest.permission.BLUETOOTH_CONNECT,Manifest.permission.BLUETOOTH,
+            Manifest.permission.BLUETOOTH_ADMIN,  Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.BLUETOOTH_SCAN,
+            Manifest.permission.BLUETOOTH_PRIVILEGED),0)
+
+        bluetoothManager = baseContext.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
+        bluetoothAdapter = bluetoothManager.getAdapter()
+
+        //Checking if bluetooth is on
+        if (!bluetoothAdapter.isEnabled) {
+            val enableBluetoothIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
+            if (ActivityCompat.checkSelfPermission(this,Manifest.permission.BLUETOOTH_CONNECT) !=
+                PackageManager.PERMISSION_GRANTED) {
+                return
+            }
+            startActivity(enableBluetoothIntent)
+        }
+
+        //If the BT isnt conected it pops up the option to enable it and calls the function again
+        val discoverDevicesIntent = IntentFilter(BluetoothDevice.ACTION_FOUND)
+        registerReceiver(receiver, discoverDevicesIntent)
+
+        bluetoothAdapter.startDiscovery()
+    }
+
+    private val receiver = object : BroadcastReceiver() {
+        //Verificação realizada em outra função
+        @SuppressLint("MissingPermission")
+        override fun onReceive(context: Context, intent: Intent) {
+            val action = intent.action
+            if (BluetoothDevice.ACTION_FOUND == action) {
+                val device: BluetoothDevice = intent.getParcelableExtra<BluetoothDevice>(BluetoothDevice.EXTRA_DEVICE)!!
+                bluetoothItens.add(device.address)
+                adapter.notifyDataSetChanged()
+            }
+        }
+    }
+
+    //Remover o registro ao dispositivo conectado com bluetooth
+    override fun onDestroy() {
+        super.onDestroy()
+        unregisterReceiver(receiver)
     }
 }
