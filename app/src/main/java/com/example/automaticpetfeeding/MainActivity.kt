@@ -20,6 +20,7 @@ import android.content.BroadcastReceiver
 import android.content.IntentFilter
 import android.widget.ArrayAdapter
 import android.widget.Toast
+import com.example.automaticpetfeeding.control.FeedingTimeController
 import java.io.IOException
 import java.util.UUID
 
@@ -29,12 +30,15 @@ class MainActivity : AppCompatActivity(), OnClickListener {
     lateinit var bluetoothAdapter: BluetoothAdapter
     lateinit var bluetoothManager: BluetoothManager
     private lateinit var bluetoothSocket: BluetoothSocket
+    private lateinit var feedingTimeController: FeedingTimeController
+    private var previousFeedingTimes: List<String> = listOf()
     lateinit var bluetoothItens: MutableList<String>
     lateinit var adapter:ArrayAdapter<String>
     lateinit var bluetRun:Runnable
     private val REQUEST_LOCATION_PERM = 99
 
-    var HC05on:Boolean = false
+    private var currentFeedingTimes: List<String> = listOf()
+
 
     //MACadress of the HC-05 Module on Arduino
     var macAddress:String = "00:21:13:00:8C:22"
@@ -49,6 +53,9 @@ class MainActivity : AppCompatActivity(), OnClickListener {
         binding = ActivityMainBinding.inflate(layoutInflater)
 
         setContentView(binding.root)
+
+        feedingTimeController = FeedingTimeController(this)
+        previousFeedingTimes = feedingTimeController.getFeedingTimesAsStringList()
         //setContentView(R.layout.activity_main)
 
         startUp()
@@ -91,6 +98,23 @@ class MainActivity : AppCompatActivity(), OnClickListener {
 
     //Button call
     private fun refreshHC05() {
+
+    }
+
+    private fun checkForChangesAndSend() {
+        val currentFeedingTimes = feedingTimeController.getFeedingTimesAsStringList()
+
+        // Verifique se houve alterações nos horários
+        if (currentFeedingTimes != previousFeedingTimes) {
+            // Chame a função para enviar os horários alterados para o endereço Bluetooth
+            sendUpdatedFeedingTimes(currentFeedingTimes)
+        }
+
+        // Atualize a lista anterior com a lista atual
+        previousFeedingTimes = currentFeedingTimes
+    }
+
+    private fun sendUpdatedFeedingTimes(currentFeedingTimes: List<String>) {
 
     }
 

@@ -9,14 +9,14 @@
 
 
     <TableLayout
-        android:id="@+id/profile_table"
+        android:id="@+id/feedingTimeList"
         android:layout_width="match_parent"
         android:layout_height="128sp"
 
         android:textAlignment="viewStart"
 
         app:layout_constraintTop_toBottomOf="@id/title"
-        app:layout_constraintBottom_toTopOf="@id/new_ft"
+        app:layout_constraintBottom_toTopOf="@id/new_prof"
 
         android:layout_marginTop="64dp"
 
@@ -59,7 +59,7 @@
     />
 
     <Button
-        android:id="@+id/new_ft"
+        android:id="@+id/new_prof"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Novo perfil"
@@ -71,7 +71,7 @@
         android:backgroundTint="@color/shapes"
         app:cornerRadius="4dp"
 
-        app:layout_constraintTop_toBottomOf="@id/profile_table"
+        app:layout_constraintTop_toBottomOf="@id/feedingTimeList"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@id/edit_ft"
         android:layout_marginTop="16dp"
@@ -92,8 +92,8 @@
         android:backgroundTint="@color/shapes"
         app:cornerRadius="4dp"
 
-        app:layout_constraintTop_toBottomOf="@id/profile_table"
-        app:layout_constraintStart_toEndOf="@id/new_ft"
+        app:layout_constraintTop_toBottomOf="@id/feedingTimeList"
+        app:layout_constraintStart_toEndOf="@id/new_prof"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="16dp"
     />

@@ -7,21 +7,23 @@
     tools:context=".TimepickerActivity"
     android:background="@color/background">
 
-
-    <TableLayout
-        android:id="@+id/profile_table"
+    <!--
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/feedingTimeList"
         android:layout_width="match_parent"
-        android:layout_height="128sp"
+        android:layout_height="296sp"
 
         android:textAlignment="viewStart"
 
         app:layout_constraintTop_toBottomOf="@id/title"
-        app:layout_constraintBottom_toTopOf="@id/new_ft"
+        app:layout_constraintBottom_toTopOf="@id/select_time_hour"
 
-        android:layout_marginTop="64dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginEnd="4dp"
+        android:layout_marginTop="2dp"
 
     />
-
+    -->
     <ImageView
         android:id="@+id/circle_one_top"
         android:layout_width="wrap_content"
@@ -39,64 +41,20 @@
         />
 
     <TextView
-        android:id="@+id/title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Defina os Horários"
+        android:id="@+id/feedingTimeList"
+        android:layout_width="match_parent"
+        android:layout_height="296sp"
 
-        android:textSize="64sp"
-        android:textAlignment="center"
-        android:textStyle="bold"
-        android:background="@color/shapes"
-        android:textColor="@color/white"
+        android:textColor="@color/black"
+        android:textSize="18dp"
 
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/title"
+        app:layout_constraintBottom_toTopOf="@id/select_time_hour"
 
-        android:layout_marginBottom="512dp"
     />
 
-    <Button
-        android:id="@+id/new_ft"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Novo Horário"
-
-        android:textStyle="bold"
-        android:textSize="18sp"
-        android:textColor="@color/white"
-
-        android:backgroundTint="@color/shapes"
-        app:cornerRadius="4dp"
-
-        app:layout_constraintTop_toBottomOf="@id/profile_table"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/edit_ft"
-        android:layout_marginTop="32dp"
-        />
 
 
-
-    <Button
-        android:id="@+id/edit_ft"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Editar Horário"
-
-        android:textStyle="bold"
-        android:textSize="18sp"
-        android:textColor="@color/white"
-
-        android:backgroundTint="@color/shapes"
-        app:cornerRadius="4dp"
-
-        app:layout_constraintTop_toBottomOf="@id/profile_table"
-        app:layout_constraintStart_toEndOf="@id/new_ft"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="32dp"
-        />
 
     <ImageView
         android:id="@+id/circle_one_bottom"
@@ -150,13 +108,118 @@
         android:layout_marginBottom="-64dp"
         />
 
-
-    <Button
-        android:id="@+id/delete_ft"
+    <TextView
+        android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Excluir horário"
+        android:text="Defina os Horários"
 
+        android:textSize="64sp"
+        android:textAlignment="center"
+        android:textStyle="bold"
+        android:background="@color/shapes"
+        android:textColor="@color/white"
+
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+
+        android:layout_marginBottom="512dp"
+        />
+
+    <TextView
+        android:id="@+id/select_time_hour"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:text="Hora:"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:textColor="@color/black"
+
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/feedingTimeList"
+        app:layout_constraintEnd_toStartOf="@id/select_time_minute"
+
+        android:layout_marginTop="4dp"
+        />
+
+    <EditText
+        android:id="@+id/hour"
+        android:layout_width="64dp"
+        android:layout_height="wrap_content"
+
+        android:hint="00"
+        android:textColorHint="@color/black"
+        android:textColor="@color/black"
+        android:background="@color/white"
+        android:inputType="number"
+
+        app:layout_constraintStart_toStartOf="@id/select_time_hour"
+        app:layout_constraintEnd_toEndOf="@id/select_time_hour"
+        app:layout_constraintTop_toBottomOf="@id/select_time_hour"
+        android:layout_marginTop="8dp"
+
+        />
+
+    <TextView
+        android:id="@+id/select_time_minute"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:text="Minutos:"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:textColor="@color/black"
+
+        app:layout_constraintStart_toEndOf="@id/select_time_hour"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/select_time_hour"
+
+        />
+
+    <EditText
+        android:id="@+id/minute"
+        android:layout_width="64dp"
+        android:layout_height="wrap_content"
+
+        android:hint="00"
+        android:textColorHint="@color/black"
+        android:textColor="@color/black"
+        android:background="@color/white"
+        android:inputType="number"
+
+        app:layout_constraintStart_toStartOf="@id/select_time_minute"
+        app:layout_constraintEnd_toEndOf="@id/select_time_minute"
+        app:layout_constraintTop_toBottomOf="@id/select_time_minute"
+        android:layout_marginTop="8dp"
+    />
+
+    <Button
+        android:id="@+id/new_ft"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Novo Horário"
+
+        android:textStyle="bold"
+        android:textSize="18sp"
+        android:textColor="@color/white"
+
+        android:backgroundTint="@color/blue_details"
+        app:cornerRadius="4dp"
+
+        app:layout_constraintTop_toBottomOf="@id/hour"
+        app:layout_constraintStart_toStartOf="@id/hour"
+        app:layout_constraintEnd_toEndOf="@id/hour"
+    />
+
+    <Button
+        android:id="@+id/btnDeleteAll"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:text="Zerar BD"
         android:textStyle="bold"
         android:textSize="18sp"
         android:textColor="@color/white"
@@ -164,10 +227,58 @@
         android:backgroundTint="@color/red"
         app:cornerRadius="4dp"
 
-        app:layout_constraintTop_toBottomOf="@id/new_ft"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/hour"
+        app:layout_constraintStart_toStartOf="@id/minute"
+        app:layout_constraintEnd_toEndOf="@id/minute"
     />
+
+    <TextView
+        android:id="@+id/deleteText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:text="ID para deletar"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+
+        app:layout_constraintTop_toBottomOf="@id/new_ft"
+        app:layout_constraintStart_toStartOf="@id/hour"
+        app:layout_constraintEnd_toEndOf="@id/hour"
+    />
+
+
+    <EditText
+        android:id="@+id/deleteID"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:hint="00"
+        android:textColorHint="@color/black"
+        android:background="@color/white"
+        android:inputType="number"
+
+        app:layout_constraintTop_toBottomOf="@id/deleteText"
+        app:layout_constraintStart_toStartOf="@id/hour"
+        app:layout_constraintEnd_toEndOf="@id/hour"
+    />
+
+    <ImageButton
+        android:id="@+id/btnDelete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:background="@drawable/delete"
+        android:backgroundTint="@color/red"
+        android:scaleX="2"
+        android:scaleY="2"
+
+        app:layout_constraintStart_toStartOf="@id/minute"
+        app:layout_constraintEnd_toEndOf="@id/minute"
+        app:layout_constraintTop_toTopOf="@id/deleteID"
+        app:layout_constraintBottom_toBottomOf="@id/deleteID"
+    />
+
+
 
     <ImageView
         android:id="@+id/cat"
@@ -180,7 +291,7 @@
         android:layout_marginBottom="-110dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginEnd="-356dp"
+        android:layout_marginStart="399dp"
         />
 
     <ImageView
@@ -196,7 +307,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginStart="-64dp"
+        android:layout_marginStart="-254dp"
         android:layout_marginBottom="-82dp"
-        />
+    />
 </androidx.constraintlayout.widget.ConstraintLayout>

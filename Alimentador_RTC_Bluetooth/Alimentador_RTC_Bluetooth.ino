@@ -44,7 +44,7 @@ int valorBT;
 // --- Declaração de Objetos ---
 DS3231 rtc(SDA, SCL);
 Time t;
-int horas, minutos, segundos, ano, mes, dia, nHorarios = 0, flag = 0, resetDia = 0, tempoAtivado = 1500;
+int horas, minutos, segundos, ano, mes, dia, nHorarios = 0, flag = 0, resetDia = 0, tempoAtivado = 2500;
 int vHoras[5];
 int vMin[5];
 int vQuant[5];
@@ -90,9 +90,9 @@ void setup() {
   
   //Descomente as linhas a seguir para configurar o horário, após comente e faça o upload novamente para o Arduino
   
-  //rtc.setDOW(SUNDAY);         // Set Day-of-Week
-  //rtc.setTime(20,17, 10);     // Set the time to 12:00:00 (24hr format)
-  //rtc.setDate(10,12,2023);    // Set the date to (dd,mm,yyyy)  
+  //rtc.setDOW(MONDAY);         // Set Day-of-Week
+  //rtc.setTime(11,35, 10);     // Set the time to 12:00:00 (24hr format)
+  rtc.setDate(01,01,2024);    // Set the date to (dd,mm,yyyy)  
 }  
 
 void loop() {
@@ -118,14 +118,14 @@ void loop() {
 
   //Serial.print(horas);
   //Serial.print("   ");
-  
+  /*
   Serial.print(dia);
   Serial.print("  --  ");  
   Serial.print(rtc.getDOWStr());  //Imprime o dia da semana
   Serial.print("  --  ");
   Serial.print(rtc.getDateStr());  
   Serial.print("  --  ");
-
+  */
   Serial.println(rtc.getTimeStr()); //Imprime o horário  
 
   if (serialBT.available()>0){    //Checando se há dados chegando pela comunicação serial
